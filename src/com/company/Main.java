@@ -18,9 +18,8 @@ public class Main {
 
             Statement st = connection.createStatement();
 
-            String date = "2002-06-01";
-//            ResultSet rs = st.executeQuery("SELECT * FROM Site WHERE DATE(date)>'"+date+"'");
-            ResultSet rs = st.executeQuery("SELECT * FROM Site");
+            String date = args[0];
+            ResultSet rs = st.executeQuery("SELECT * FROM Site WHERE DATE(date)>'"+date+"'");
 
 
             Map<String, String> temp = new HashMap<>();
@@ -31,14 +30,6 @@ public class Main {
 
                 temp.put(id, url);
             }
-
-//            temp.forEach((k,v)-> {
-//                try {
-//                    setStatus(k, v, connection);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            });
 
             ForkJoinPool pool = new ForkJoinPool(1000);
             pool.submit(()->temp.entrySet().parallelStream().forEach(entry-> {
@@ -55,7 +46,6 @@ public class Main {
             rs.close();
             connection.close();
 
-//            urls.forEach(System.out::println);
 
         } catch (Exception e){
             System.out.println(e.getMessage());
@@ -64,14 +54,12 @@ public class Main {
 
 //    Get site status
     public static void setStatus(String id, String s_url, Connection con) throws IOException {
-//        URL url = new URL(s_url);
-//        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//        connection.setRequestMethod("GET");
-//        connection.connect();
+        URL url = new URL(s_url);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.connect();
 
-//        int code = connection.getResponseCode();
-
-        int code = 200;
+        int code = connection.getResponseCode();
 
         try {
             Statement st = con.createStatement();
